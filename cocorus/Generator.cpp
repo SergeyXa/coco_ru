@@ -43,16 +43,12 @@ namespace Coco {
 		if (coco_string_length(tab->frameDir) != 0) {
 			frameFile = coco_string_create_append(tab->frameDir, L"/");
 			coco_string_merge(frameFile, frame);
-			char *chFrameFile = coco_string_create_char(frameFile);
-			fram = fopen(chFrameFile, "r");
-			delete [] chFrameFile;
+			fram = _wfopen(frameFile, L"r,ccs=utf-8");
 		}
 		if (fram == NULL) {
 			delete [] frameFile;
 			frameFile = coco_string_create_append(tab->srcDir, frame);  /* pdt */
-			char *chFrameFile = coco_string_create_char(frameFile);
-			fram = fopen(chFrameFile, "r");
-			delete [] chFrameFile;
+			fram = _wfopen(frameFile, L"r,ccs=utf-8");
 		}
 		if (fram == NULL) {
 			wchar_t *message = coco_string_create_append(L"-- Cannot find : ", frame);
@@ -66,22 +62,18 @@ namespace Coco {
 
 	FILE* Generator::OpenGen(const wchar_t *genName) { /* pdt */
 		wchar_t *fn = coco_string_create_append(tab->outDir, genName); /* pdt */
-		char *chFn = coco_string_create_char(fn);
 
-		if ((gen = fopen(chFn, "r")) != NULL) {
+		if ((gen = _wfopen(fn, L"r,ccs=utf-8")) != NULL) {
 			fclose(gen);
 			wchar_t *oldName = coco_string_create_append(fn, L".old");
-			char *chOldName = coco_string_create_char(oldName);
-			remove(chOldName); rename(chFn, chOldName); // copy with overwrite
-			coco_string_delete(chOldName);
+			_wremove(oldName); _wrename(fn, oldName); // copy with overwrite
 			coco_string_delete(oldName);
 		}
-		if ((gen = fopen(chFn, "w")) == NULL) {
+		if ((gen = _wfopen(fn, L"w,ccs=utf-8")) == NULL) {
 			wchar_t *message = coco_string_create_append(L"-- Cannot generate : ", genName);
 			errors->Exception(message);
 			delete [] message;
 		}
-		coco_string_delete(chFn);
 		coco_string_delete(fn);
 
 		return gen;
@@ -93,17 +85,13 @@ namespace Coco {
 
 		if (coco_string_length(tab->frameDir) != 0) {
 			wchar_t *copyFr = coco_string_create_append(tab->frameDir, L"/Copyright.frame");
-			char *chCopyFr = coco_string_create_char(copyFr);
-			file = fopen(chCopyFr, "r");
+			file = _wfopen(copyFr, L"r,ccs=utf-8");
 			delete [] copyFr;
-			delete [] chCopyFr;
 		}
 		if (file == NULL) {
 			wchar_t *copyFr = coco_string_create_append(tab->srcDir, L"Copyright.frame");
-			char *chCopyFr = coco_string_create_char(copyFr);
-			file = fopen(chCopyFr, "r");
+			file = _wfopen(copyFr, L"r,ccs=utf-8");
 			delete [] copyFr;
-			delete [] chCopyFr;
 		}
 		if (file == NULL) {
 			return;

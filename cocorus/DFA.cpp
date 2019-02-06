@@ -800,7 +800,8 @@ void DFA::WriteScanner() {
 	g.CopyFramePart(L"-->casing1");
 	if (ignoreCase) {
 		fwprintf(gen, L"\t\tvalCh = ch;\n");
-		fwprintf(gen, L"\t\tif ('A' <= ch && ch <= 'Z') ch = ch - 'A' + 'a'; // ch.ToLower()");
+		fwprintf(gen, L"\t\tif ('A' <= ch && ch <= 'Z') ch = ch - 'A' + 'a'; // ch.ToLower()\n");
+		fwprintf(gen, L"\t\tif (L'À' <= ch && ch <= L'ß') ch = ch - L'À' + L'à'; // ch.ToLower()");
 	}
 	g.CopyFramePart(L"-->casing2");
 	fwprintf(gen, L"\t\ttval[tlen++] = ");
